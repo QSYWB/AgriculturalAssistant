@@ -191,7 +191,7 @@ AgriculturalAssistant/
 
 ---
 
-## 项目亮点（适合简历面试）
+## 项目亮点
 
 - **反幻觉工程**：BM25 实体匹配做事实校验，零额外 Token 开销，结果可溯源验证
 - **多级降级策略**：意图分类模型降级、RAG 检索降级（无结果 → 纯网络搜索）、MySQL 降级（游客模式），每个环节都有 Fallback
@@ -199,9 +199,5 @@ AgriculturalAssistant/
 - **安全性设计**：从输入过滤、输出过滤、速率限制到路径安全，面向生产环境的防护
 - **工程规范**：Docker Compose 一键部署、Makefile 构建命令、环境变量配置管理
 
----
 
-## 许可证
-
-MIT License — 详见 [LICENSE](LICENSE)
 
