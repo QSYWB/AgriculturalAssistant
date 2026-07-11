@@ -1,0 +1,51 @@
+﻿# ===== Environment =====
+.env
+.env.local
+.env.*.local
+
+
+# ===== Dev tooling =====
+.agents/
+.codex/
+ai-sidebar/
+uv.lock
+# ===== Secrets =====
+data/.secrets.json
+
+# ===== Python =====
+__pycache__/
+*.pyc
+*.pyo
+.venv
+.venv2
+*.egg-info/
+
+# ===== IDE =====
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ===== OS =====
+.DS_Store
+Thumbs.db
+
+# ===== Logs =====
+logs/
+*.log
+
+# ===== Data (exclude all runtime data) =====
+data/chroma_db/
+data/chat_history/
+data/uploads/
+data/cache/
+data/records/
+
+# ===== Frontend =====
+frontend/node_modules/
+frontend/dist/
+
+# ===== Testing =====
+.coverage
+htmlcov/
+
