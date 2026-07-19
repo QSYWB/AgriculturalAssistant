@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import ChatLayout from '../pages/ChatLayout.vue'
 import SettingsPage from '../pages/SettingsPage.vue'
 
+// 路由表
 const routes = [
   {
     path: '/',
@@ -15,6 +16,7 @@ const routes = [
   },
 ]
 
+// 路由器
 const router = createRouter({
   history: createWebHistory('/chat/'),
   routes,

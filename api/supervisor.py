@@ -1,4 +1,4 @@
-"""Supervisor API routes — supports guest (no persistence) and authenticated (MySQL) modes."""
+"""调度器 API 路由 — 支持访客模式（无持久化）和认证模式（MySQL）。"""
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.responses import StreamingResponse
@@ -26,7 +26,7 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
-    session_id: str  # empty string for guest mode
+    session_id: str  # 访客模式为空字符串
 
 
 class SessionInfo(BaseModel):
@@ -49,13 +49,13 @@ async def post_supervisor(
     current_user: dict = Depends(optional_current_user),
     db: Session = Depends(get_db),
 ):
-    """Chat endpoint — works for both guest and authenticated users."""
+    """聊天接口 — 访客和已认证用户均可使用。"""
     try:
         user_id = current_user["user_id"] if current_user else None
         session_id = body.session_id or ""
 
         if user_id:
-            # Authenticated: use or create session
+            # 已认证：使用或创建会话
             if body.session_id:
                 s = conversation_service.get_session(db, body.session_id, user_id)
                 if not s:
@@ -71,7 +71,7 @@ async def post_supervisor(
             history_summary = conversation_service.get_history_summary(db, session_id)
             last_turn = conversation_service.get_last_assistant_message(db, session_id)
         else:
-            # Guest: no persistence
+            # 访客：不持久化
             ireason = InputGuard.check_input(body.query)
             if ireason:
                 raise HTTPException(status_code=400, detail=ireason)
@@ -112,7 +112,7 @@ async def stream_supervisor(
     current_user: dict = Depends(optional_current_user),
     db: Session = Depends(get_db),
 ):
-    """SSE streaming chat — works for both guest and authenticated users."""
+    """SSE 流式聊天 — 访客和已认证用户均可使用。"""
     user_id = current_user["user_id"] if current_user else None
     session_id = body.session_id or ""
 
@@ -165,7 +165,7 @@ async def stream_supervisor(
     return StreamingResponse(generate(), media_type="text/event-stream")
 
 
-# ---- Session management (authenticated only) --------------------------------
+# ---- 会话管理（仅已认证用户） --------------------------------
 
 @router.get("/sessions", response_model=SessionListResponse)
 async def list_sessions(

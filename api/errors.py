@@ -1,4 +1,4 @@
-﻿"""Unified error handling module."""
+﻿"""统一的错误处理模块。"""
 
 from fastapi import Request, HTTPException
 from fastapi.responses import JSONResponse
@@ -6,7 +6,7 @@ from utils.logger_handler import app_logger, error_logger
 
 
 def register_error_handlers(app):
-    """Register unified error handlers on the FastAPI app."""
+    """在 FastAPI 应用上注册统一的错误处理器。"""
 
     @app.exception_handler(HTTPException)
     async def http_exception_handler(request: Request, exc: HTTPException):

@@ -1,4 +1,4 @@
-﻿"""Knowledge QA + Knowledge file management API — management endpoints require auth."""
+﻿"""知识问答 + 知识文件管理 API — 管理端点需要认证。"""
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, BackgroundTasks
 from pydantic import BaseModel
@@ -31,7 +31,7 @@ class KnowledgeFilesResponse(BaseModel):
 
 @router.post("", response_model=KnowledgeResponse)
 async def post_knowledge(body: KnowledgeQuery):
-    """Knowledge Q&A — open to all users (guests and authenticated)."""
+    """知识问答 — 对所有用户开放（访客和已认证用户均可使用）。"""
     try:
         answer = invoke_knowledge_agent(body.query)
         return KnowledgeResponse(answer=answer)

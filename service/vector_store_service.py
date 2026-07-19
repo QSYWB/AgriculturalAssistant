@@ -18,7 +18,12 @@ class VectorStoreService:
             collection_name=settings.chroma_collection_name,
             persist_directory=settings.chroma_persist_dir,
             embedding_function=embedding_model)
-        self.spliter = RecursiveCharacterTextSplitter(chunk_size=settings.chunk_size, chunk_overlap=settings.chunk_overlap, length_function=len, separators=settings.separators)
+        self.spliter = RecursiveCharacterTextSplitter(
+            chunk_size=settings.chunk_size,
+            chunk_overlap=settings.chunk_overlap,
+            length_function=len,
+            separators=settings.separators
+        )
         self.min_chunk_bytes = settings.min_chunk_bytes
 
     def get_retrieve(self, k: int = 15):

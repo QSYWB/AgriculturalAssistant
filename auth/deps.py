@@ -1,4 +1,4 @@
-﻿"""FastAPI dependencies for authentication and authorization."""
+﻿"""FastAPI 依赖注入：认证与授权。"""
 
 from typing import Optional
 
@@ -17,7 +17,7 @@ def get_current_user(
     credentials: Optional[HTTPBearer] = Depends(_bearer_scheme),
     db: Session = Depends(get_db),
 ) -> dict:
-    """Dependency: extract and verify the current user. Returns 401 if invalid."""
+    """依赖注入：提取并验证当前用户。无效时返回 401。"""
     if credentials is None:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -39,7 +39,7 @@ def optional_current_user(
     credentials: Optional[HTTPBearer] = Depends(_bearer_scheme),
     db: Session = Depends(get_db),
 ) -> Optional[dict]:
-    """Dependency: return user info if authenticated, None otherwise (guest mode)."""
+    """依赖注入：已认证返回用户信息，否则返回 None（访客模式）。"""
     if credentials is None:
         return None
     return auth_service.verify_token(credentials.credentials, db)

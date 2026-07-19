@@ -32,7 +32,7 @@ def get_session_local():
 
 
 def get_db():
-    """FastAPI dependency — yields a DB session and closes it after request."""
+    """FastAPI 依赖注入 — 创建数据库会话，请求结束后关闭。"""
     db = get_session_local()()
     try:
         yield db
@@ -41,7 +41,7 @@ def get_db():
 
 
 def init_db():
-    """Create all tables. If MySQL is unavailable, log warning and continue."""
+    """创建所有数据表。如果 MySQL 不可用，记录警告后继续。"""
     try:
         Base.metadata.create_all(bind=_get_engine())
         logger.info("Database tables created / verified successfully.")

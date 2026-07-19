@@ -1,4 +1,4 @@
-﻿"""Test Rerank effect: compare results before (raw vector) vs after (cross-encoder rerank)."""
+﻿"""测试重排效果：对比重排前（原始向量）与重排后（交叉编码器）的结果。"""
 
 import sys
 from pathlib import Path

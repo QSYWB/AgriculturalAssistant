@@ -1,4 +1,4 @@
-﻿"""Multi-turn conversation memory service — supports guest (no persistence) and authenticated (MySQL) modes."""
+﻿"""多轮对话记忆服务 — 支持访客模式（无持久化）和认证模式（MySQL）。"""
 
 import uuid
 from datetime import datetime, timezone
@@ -11,14 +11,14 @@ from utils.logger_handler import app_logger
 
 
 class ConversationService:
-    """Handles conversation sessions.
+    """处理对话会话。
     
     - Guest mode (user_id=None): sessions are not persisted, in-memory only.
     - Authenticated mode (user_id set): sessions stored in MySQL.
     """
 
     def create_session(self, db: Session, user_id: Optional[str] = None, title: str = "新会话") -> str:
-        """Create a new session. Returns session_id string."""
+        """创建新会话。返回 session_id 字符串。"""
         sid = uuid.uuid4().hex[:12]
         if user_id:
             session = ChatSession(
@@ -31,7 +31,7 @@ class ConversationService:
         return sid
 
     def delete_session(self, db: Session, sid: str, user_id: Optional[str] = None) -> bool:
-        """Delete a session. Returns True if deleted."""
+        """删除会话。删除成功返回 True。"""
         if not user_id:
             return False
         session = db.query(ChatSession).filter(
@@ -84,18 +84,18 @@ class ConversationService:
 
     def add_user_message(self, db: Session, sid: str, content: str, user_id: Optional[str] = None) -> bool:
         if not user_id:
-            return True  # guest: no-op, pretend success
+            return True  # 访客：空操作，假装成功
         return self._add_message(db, sid, content, "user")
 
     def add_assistant_message(self, db: Session, sid: str, content: str, user_id: Optional[str] = None) -> bool:
         if not user_id:
-            return True  # guest: no-op
+            return True  # 访客：空操作
         return self._add_message(db, sid, content, "assistant")
 
     def _add_message(self, db: Session, sid: str, content: str, role: str) -> bool:
         msg = Message(session_id=sid, role=role, content=content)
         db.add(msg)
-        # Update session metadata
+        # 更新会话元信息
         session = db.query(ChatSession).filter(ChatSession.session_id == sid).first()
         if session:
             session.message_count = (session.message_count or 0) + 1
@@ -117,7 +117,7 @@ class ConversationService:
         return [{"role": m.role, "content": m.content} for m in messages]
 
     def get_history_summary(self, db: Session, sid: str, max_exchanges: int = 3) -> str:
-        """Get a short summary of recent exchanges for context injection."""
+        """获取最近几轮对话的简短摘要，用于上下文注入。"""
         messages = (
             db.query(Message)
             .filter(Message.session_id == sid)
@@ -149,5 +149,5 @@ class ConversationService:
         return msg.content if msg else ""
 
 
-# Singleton — used by API routes; methods accept user_id to support guest mode
+# 单例 — 供 API 路由使用；方法接受 user_id 参数以支持访客模式
 conversation_service = ConversationService()

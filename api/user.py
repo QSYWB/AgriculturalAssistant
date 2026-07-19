@@ -1,4 +1,4 @@
-"""User profile & feedback API routes."""
+"""用户资料与反馈 API 路由。"""
 
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from pydantic import BaseModel
@@ -77,7 +77,7 @@ async def upload_avatar(
     return {"avatar": user.avatar if user else ""}
 
 
-# ---- Feedback ----
+# ---- 反馈 ----
 
 class FeedbackRequest(BaseModel):
     content: str

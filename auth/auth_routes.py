@@ -1,4 +1,4 @@
-﻿"""Authentication API routes — register, login, token refresh, all using MySQL."""
+﻿"""认证 API 路由 — 注册、登录、令牌刷新，基于 MySQL。"""
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
@@ -11,7 +11,7 @@ from db.database import get_db
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
 
-# ---- Request / Response models --------------------------------------------
+# ---- 请求 / 响应模型 ---------------------------------------------------
 
 class RegisterRequest(BaseModel):
     username: str = Field(..., min_length=2, max_length=50)
@@ -40,7 +40,7 @@ class UserInfo(BaseModel):
     role: str
 
 
-# ---- Routes ---------------------------------------------------------------
+# ---- 路由 ---------------------------------------------------------------
 
 @router.post("/register", response_model=TokenResponse, status_code=status.HTTP_201_CREATED)
 async def register(body: RegisterRequest, db: Session = Depends(get_db)):

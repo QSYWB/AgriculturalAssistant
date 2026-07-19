@@ -1,4 +1,4 @@
-﻿"""Authentication service — JWT tokens, password hashing with database storage."""
+﻿"""认证服务 — JWT 令牌、密码哈希，基于数据库存储。"""
 
 import os
 import random
@@ -23,13 +23,13 @@ def _verify_password(password: str, password_hash: str) -> bool:
     pwd_bytes = password.encode("utf-8")[:72]
     return _bcrypt.checkpw(pwd_bytes, password_hash.encode("utf-8"))
 
-# JWT signing key — regenerated on every restart (tokens invalidated)
-# In production, persist this in environment variable JWT_SECRET_KEY
+# JWT 签名密钥 — 每次重启重新生成（旧令牌失效）
+# 生产环境应将此密钥持久化到环境变量 JWT_SECRET_KEY
 _jwt_secret = settings.jwt_secret_key or os.urandom(32).hex()
 
 
 class AuthService:
-    """Handles authentication: register, login, token lifecycle using MySQL."""
+    """认证处理：注册、登录、令牌生命周期，基于 MySQL。"""
 
     def register(self, username: str, password: str, db: Session, nickname: str = "", avatar: str = "") -> Optional[dict]:
         if not username or len(username) < 2:
@@ -39,7 +39,7 @@ class AuthService:
         existing = db.query(User).filter(User.username == username).first()
         if existing:
             return None
-        # Generate unique 9-digit numeric user_id
+        # 生成唯一的 9 位数字 user_id
         for _ in range(100):
             user_id = str(random.randint(100000000, 999999999))
             if not db.query(User).filter(User.user_id == user_id).first():
@@ -68,7 +68,7 @@ class AuthService:
             return None
         return {"user_id": user.user_id, "username": username, "nickname": user.nickname or username, "avatar": user.avatar or "", "role": user.role}
 
-    # ---- JWT tokens -------------------------------------------------------
+    # ---- JWT 令牌 -------------------------------------------------------
 
     def create_token(self, user_info: dict, expires_delta: Optional[timedelta] = None) -> str:
         expire = datetime.now(timezone.utc) + (expires_delta or timedelta(hours=settings.jwt_expire_hours))

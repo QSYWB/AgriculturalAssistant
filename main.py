@@ -28,7 +28,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 @app.on_event("startup")
 async def setup_thread_pool():
-    """Increase thread pool for concurrent requests."""
+    """增加线程池大小以支持并发请求。"""
     loop = asyncio.get_running_loop()
     loop.set_default_executor(ThreadPoolExecutor(max_workers=20))
     init_db()
@@ -43,11 +43,11 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 
-# ---- Middleware -------------------------------------------------------------
+# ---- 中间件 ---------------------------------------------------------------
 app.add_middleware(GZipMiddleware, minimum_size=1000)
 app.add_middleware(SlowAPIMiddleware)
 
-# CORS — restrict origins in production
+# CORS — 生产环境应限制域名
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -57,19 +57,19 @@ app.add_middleware(
 )
 
 
-# ---- Routers (public before protected) --------------------------------------
-app.include_router(auth_routes.router)       # /api/auth/*
-app.include_router(knowledge.router)         # /api/chat/knowledge
-app.include_router(supervisor.router)        # /api/chat/supervisor
+# ---- 路由（公开路由在前，认证路由在后）--------------------------------------------
+app.include_router(auth_routes.router)       # /api/auth/* 认证路由
+app.include_router(knowledge.router)         # /api/chat/knowledge 知识库
+app.include_router(supervisor.router)        # /api/chat/supervisor 对话路由
 app.include_router(diagnose.router)
-app.include_router(user_api.router)          # /api/diagnose
+app.include_router(user_api.router)          # /api/user 用户路由
 
 
-# ---- Error handlers ---------------------------------------------------------
+# ---- 错误处理器 -----------------------------------------------------------
 register_error_handlers(app)
 
 
-# ---- Middleware: inject request ID / session ID -----------------------------
+# ---- 中间件：注入请求 ID / 会话 ID -------------------------------------------
 @app.middleware("http")
 async def inject_request_id(request: Request, call_next):
     request_id = uuid.uuid4().hex[:8]
@@ -94,7 +94,7 @@ async def root():
     }
 
 
-# ---- Mount frontend SPA -----------------------------------------------------
+# ---- 挂载前端 SPA ---------------------------------------------------------
 _frontend_path = Path(__file__).parent / "frontend"
 if _frontend_path.exists():
     dist = _frontend_path / "dist"
